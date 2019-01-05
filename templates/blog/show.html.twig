@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <article>
+        <h2>{{ article.title }}</h2>
+        <div class="metadata">
+            <p>Ecrit le {{ article.createAt | date('d/m/Y') }} à {{ article.createAt | date('H:i') }} dans la catégorie {{ article.category.title }}</p>
+        </div>
+        <div class="content">
+            <img src="{{ article.image }}" alt="">
+            <p>{{ article.content | raw }}</p>
+        </div>
+        <hr>
+    </article>
+    <section id="comments">
+        <h3>Commentaires</h3>
+        {% for comment in article.comments %}
+
+        <div class="comment">
+    <div class="row">
+        <div class="col-3">
+            {{ comment.author }} (<small>{{ comment.createdAt | date('d/m/Y à H:i') }}</small>)
+        </div>
+        <div class="col-9">
+            {{ comment.content | raw }}
+        </div>
+    </div>
+</div>
+        {% endfor %}
+        <br>
+        <hr>
+        <br>
+    </section>
+
+    {% if app.user %}
+    <section class="addComment">
+        <div class="row">
+            <div class="col-10 offset-1">
+                <h4>Déposez votre commentaire</h4>
+
+                {{ form_start(formComment) }}
+                {{ form_widget(formComment.content, {'attr' :{'placeholder':'Votre commentaire'}}) }}
+                <br>
+                <button type="submit" class="btn btn-success">Ajouter un commentaire</button>
+                {{ form_end(formComment) }}
+
+            </div>
+        </div>
+    </section>
+    {% else %}
+        <hr>
+        <div class="row">
+            <div class="col-6 offset-3">
+
+                <h4>Vous souhaitez commenter ? <a href="{{ path('security_login') }}">Connectez-vous</a></h4>
+            </div>
+        </div>
+    {% endif %}
+
+    <br>
+
+{% endblock %}
